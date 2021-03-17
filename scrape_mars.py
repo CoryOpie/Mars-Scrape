@@ -14,12 +14,18 @@ import requests
 # ## NASA Mars News
 
 # In[2]:
+def init_browser():
+    executable_path = {"executable_path" : "chromedriver.exe"}
+    return Browser("chrome", **executable_path, headless=False)
+
+
 
 def scrape():
     #path
-    executable_path = {"executable_path": "chromedriver"}
-    browser = Browser("chrome", **executable_path, headless=False)
+    # executable_path = {"executable_path": "chromedriver"}
+    # browser = Browser("chrome", **executable_path, headless=False)
 
+    browser = init_browser()
 
     # In[3]:
 
@@ -27,7 +33,7 @@ def scrape():
     #set up url
     nasa_url = "https://mars.nasa.gov/news/"
     browser.visit(nasa_url)
-
+    time.sleep(2)
 
     # In[4]:
 
@@ -48,7 +54,7 @@ def scrape():
 
     # print(news_title)
     # print(news_teaser)
-    browser.quit()
+    # browser.quit()
 
 
     # ## JPL Mars Space Images - Featured Image
@@ -57,8 +63,8 @@ def scrape():
 
 
     #path
-    executable_path = {"executable_path": "chromedriver"}
-    browser = Browser("chrome", **executable_path, headless=False)
+    # executable_path = {"executable_path": "chromedriver"}
+    # browser = Browser("chrome", **executable_path, headless=False)
 
 
     #url
@@ -67,7 +73,7 @@ def scrape():
     jpl_url_root = jpl_url.split("index.html")[0]
     browser.visit(jpl_url)
 
-
+    time.sleep(1)
     # In[38]:
 
 
@@ -86,9 +92,9 @@ def scrape():
     # jpl_image = jpl_soup.find("div", class_="fancybox-skin")
 
     jpl_image = jpl_soup.find_all("img")[1]["src"]
-    print(jpl_image)
+    # print(jpl_image)
 
-    browser.quit()
+    # browser.quit()
 
     featured_image_url = jpl_url_root + jpl_image
     # print(featured_image_url)
@@ -102,18 +108,18 @@ def scrape():
 
     #path/url
 
-    executable_path = {"executable_path": "chromedriver"}
-    browser = Browser("chrome", **executable_path, headless=False)
+    # executable_path = {"executable_path": "chromedriver"}
+    # browser = Browser("chrome", **executable_path, headless=False)
 
     facts_url = "https://space-facts.com/mars/"
     browser.visit(facts_url)
-
+    time.sleep(1)
 
     #to table
     facts_df = pd.read_html(facts_url)
 
     # print(facts_df)
-    browser.quit()
+    # browser.quit()
 
 
     # In[33]:
@@ -135,9 +141,9 @@ def scrape():
     # In[34]:
 
 
-    facts_table = new_df.to_html()
+    # facts_table = new_df.to_html()
 
-
+    newnew_df = new_df.to_html()
 
     # print(facts_table)
 
@@ -147,13 +153,13 @@ def scrape():
     # In[8]:
 
 
-    executable_path = {"executable_path": "chromedriver"}
-    browser = Browser("chrome", **executable_path, headless=False)
+    # executable_path = {"executable_path": "chromedriver"}
+    # browser = Browser("chrome", **executable_path, headless=False)
 
     hemi_url = "https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars"
     hemi_url_root = hemi_url.split("/search")[0]
     browser.visit(hemi_url)
-
+    time.sleep(2)
 
     # In[9]:
 
@@ -165,7 +171,7 @@ def scrape():
     hemi_html = browser.html
     hemi_soup = BeautifulSoup(hemi_html, "html.parser")
     hemi_results = hemi_soup.find_all("div", class_="item")
-        
+    time.sleep(2)
     #get url for each hemisphere
     for item in hemi_results:
         item_url = item.a["href"]
@@ -213,16 +219,17 @@ def scrape():
     # print(hemisphere_image_urls)
 
 
-    browser.quit()
+    # browser.quit()
 
     mars_data_dict = {
         "news_title" : news_title,
         "news_teaser" : news_teaser,
+        "mars_facts" : newnew_df,
         "featured_image_url" : featured_image_url,
-        "hemisphere_image" : hemisphere_image_dict
+        "hemisphere_image" : hemisphere_image_urls
     }
 
-
+    browser.quit()
     return(mars_data_dict)
 
 
